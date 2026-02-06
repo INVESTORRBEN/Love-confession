@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Love Note</title>
+
 <style>
   body {
     font-family: 'Segoe UI', sans-serif;
-    background: #ffc0cb; /* Soft pink background */
+    background: #ffc0cb;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     min-height: 100vh;
     margin: 0;
   }
 
   .container {
-    border: 5px solid #ff66b3; /* Pink outer frame */
+    border: 5px solid #ff66b3;
     border-radius: 20px;
     padding: 20px;
     background: #ffe6f0;
@@ -28,11 +28,10 @@
 
   .note {
     background: #fff0f5;
-    padding: 20px 25px;
+    padding: 20px;
     border-radius: 15px;
     font-size: 1.2em;
-    margin-bottom: 20px;
-    opacity: 1;
+    margin-bottom: 15px;
     transition: opacity 0.7s ease;
   }
 
@@ -42,38 +41,35 @@
     max-width: 100%;
     margin-bottom: 15px;
     transition: opacity 0.7s ease;
-    opacity: 1;
   }
 
   button {
     padding: 12px 25px;
-    margin: 5px;
+    margin: 6px;
     border: none;
     background: #ff66b3;
     color: white;
     font-size: 1.1em;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s;
   }
 
   button:hover {
     background: #ff3399;
   }
-
-  button:disabled {
-    background: #ffb3d9;
-    cursor: not-allowed;
-  }
 </style>
 </head>
+
 <body>
 
 <div class="container">
   <div class="note" id="note">
     1. Hey my love 💕, my heart's been holding a tiny secret for you.
   </div>
-  <img class="media" id="media" src="https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3451.gif" alt="Love Gif">
+
+  <img class="media" id="media"
+       src="https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3451.gif">
+
   <div id="buttons">
     <button id="nextBtn">Next</button>
   </div>
@@ -96,68 +92,70 @@
     "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3453.gif"
   ];
 
+  const yesMedia = "https://raw.githubusercontent.com/INVESTORRBEN/Love-confession/refs/heads/main/IMG_3455.gif";
+  const noMedia  = "https://raw.githubusercontent.com/INVESTORRBEN/Love-confession/refs/heads/main/IMG_3454.png";
+
   let currentIndex = 0;
-  const noteDiv = document.getElementById('note');
-  const mediaImg = document.getElementById('media');
-  const buttonsDiv = document.getElementById('buttons');
 
-  function showNext() {
-    if(currentIndex < messages.length - 1){
-      currentIndex++;
-      fadeMessage(messages[currentIndex], mediaUrls[currentIndex]);
+  const noteDiv = document.getElementById("note");
+  const mediaImg = document.getElementById("media");
+  const buttonsDiv = document.getElementById("buttons");
 
-      // If we reach page 5, replace Next button with Yes/No buttons
-      if(currentIndex === 4){
-        buttonsDiv.innerHTML = `
-          <button id="yesBtn">Yes 💖</button>
-          <button id="noBtn">No 💔</button>
-        `;
-        document.getElementById('yesBtn').addEventListener('click', () => handleAnswer(true));
-        document.getElementById('noBtn').addEventListener('click', () => handleAnswer(false));
-      }
-    }
-  }
-
-  function fadeMessage(text, mediaUrl) {
+  function fade(text, media) {
     noteDiv.style.opacity = 0;
     mediaImg.style.opacity = 0;
+
     setTimeout(() => {
       noteDiv.textContent = text;
-      mediaImg.src = mediaUrl;
+      mediaImg.src = media;
       noteDiv.style.opacity = 1;
       mediaImg.style.opacity = 1;
     }, 700);
   }
 
-  function handleAnswer(isYes) {
-    if(isYes){
-      fadeMessage("Hurray! 🎉 You make me so happy ❤️", mediaUrls[4]);
+  function showNext() {
+    currentIndex++;
+    fade(messages[currentIndex], mediaUrls[currentIndex]);
+
+    if (currentIndex === 4) {
+      buttonsDiv.innerHTML = `
+        <button onclick="answer(true)">Yes 💖</button>
+        <button onclick="answer(false)">No 💔</button>
+      `;
+    }
+  }
+
+  function answer(isYes) {
+    if (isYes) {
+      fade("Hurray! 🎉 You make me so happy ❤️", yesMedia);
     } else {
-      fadeMessage("Oh… 😞 I’ll miss us 💔", mediaUrls[4]);
+      fade("Oh… 😞 I’ll miss us 💔", noMedia);
     }
 
-    // Replace buttons with Share button
     buttonsDiv.innerHTML = `
-      <button id="shareBtn">Share with your partner 💌</button>
+      <button onclick="share(${isYes})">Share with your partner 💌</button>
     `;
-    document.getElementById('shareBtn').addEventListener('click', () => shareMessage(isYes));
   }
 
-  function shareMessage(isYes) {
-    const message = isYes ? "Hurray! 🎉 You make me so happy ❤️" : "Oh… 😞 I’ll miss us 💔";
-    const media = mediaUrls[4];
-    if(navigator.share){
+  function share(isYes) {
+    const text = isYes
+      ? "Hurray! 🎉 You make me so happy ❤️"
+      : "Oh… 😞 I’ll miss us 💔";
+
+    const media = isYes ? yesMedia : noMedia;
+
+    if (navigator.share) {
       navigator.share({
-        title: "A Love Note for You 💖",
-        text: message,
+        title: "A Love Note 💖",
+        text: text,
         url: media
-      }).catch(err => console.log(err));
+      });
     } else {
-      alert("Your device does not support direct sharing. Copy the GIF link and share manually!");
+      alert("Sharing not supported on this device.");
     }
   }
 
-  document.getElementById('nextBtn').addEventListener('click', showNext);
+  document.getElementById("nextBtn").addEventListener("click", showNext);
 </script>
 
 </body>
