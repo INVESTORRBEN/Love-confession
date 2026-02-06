@@ -52,7 +52,7 @@
     font-size: 1.1em;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.1s ease, background 0.2s;
   }
 
   button:hover {
@@ -61,6 +61,19 @@
 
   button:active {
     transform: scale(0.94);
+  }
+
+  /* Heartbeat animation */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(0.95); }
+    75% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .pulse {
+    animation: pulse 0.6s ease;
   }
 </style>
 </head>
@@ -106,12 +119,14 @@
   const mediaImg = document.getElementById("media");
   const buttonsDiv = document.getElementById("buttons");
 
+  // Haptic vibration for all buttons
   function haptic(type = "light") {
     if (navigator.vibrate) {
       navigator.vibrate(type === "medium" ? 60 : 30);
     }
   }
 
+  // Fade animation for note + media
   function fade(text, media) {
     noteDiv.style.opacity = 0;
     mediaImg.style.opacity = 0;
@@ -124,27 +139,39 @@
     }, 700);
   }
 
+  // Show next message
   function showNext() {
+    haptic('light'); // vibration on tap
     currentIndex++;
     fade(messages[currentIndex], mediaUrls[currentIndex]);
 
     if (currentIndex === 4) {
       buttonsDiv.innerHTML = `
         <button onclick="haptic('medium'); answer(true)">Yes 💖</button>
-        <button onclick="haptic('light'); answer(false)">No 💔</button>
+        <button onclick="haptic('medium'); answer(false)">No 💔</button>
       `;
     }
   }
 
+  // Answer Yes/No
   function answer(isYes) {
+    haptic('medium'); // vibration for answer tap
+
     if (isYes) {
       fade("Hurray! 🎉 You make me so happy ❤️", yesMedia);
+
+      // Heart pulse effect
+      mediaImg.classList.add("pulse");
+      mediaImg.addEventListener("animationend", () => {
+        mediaImg.classList.remove("pulse");
+      }, { once: true });
+
     } else {
       fade("Oops 😞 even the screenshot is TAKEN but you’re not TAKEN", noMedia);
     }
 
     buttonsDiv.innerHTML = `
-      <button>Take a screenshot and share with your partner 💌</button>
+      <button onclick="haptic('light')">Take a screenshot and share with your partner 💌</button>
     `;
   }
 
