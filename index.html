@@ -3,125 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You ❤️</title>
+<title>Love Note</title>
 
 <style>
   body {
-    margin: 0;
-    height: 100vh;
-    background: #ff4d6d;
+    font-family: 'Segoe UI', sans-serif;
+    background: #ffc0cb;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    margin: 0;
   }
 
-  .card {
-    background: white;
-    padding: 30px 20px;
+  .container {
+    border: 5px solid #ff66b3;
     border-radius: 20px;
+    padding: 20px;
+    background: #ffe6f0;
     text-align: center;
-    max-width: 320px;
-    width: 90%;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    max-width: 450px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
   }
 
-  h1 {
-    color: #ff4d6d;
-    font-size: 22px;
-    margin-bottom: 20px;
+  .note {
+    background: #fff0f5;
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    transition: opacity 0.7s ease;
   }
 
-  .buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+  .media {
+    border: 5px solid white;
+    border-radius: 15px;
+    max-width: 100%;
+    margin-bottom: 15px;
+    transition: opacity 0.7s ease;
   }
 
   button {
+    padding: 12px 25px;
+    margin: 6px;
     border: none;
-    padding: 12px 22px;
-    border-radius: 30px;
-    font-size: 16px;
+    background: #ff66b3;
+    color: white;
+    font-size: 1.1em;
+    border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    transition: transform 0.1s ease;
+  }
+
+  button:hover {
+    background: #ff3399;
   }
 
   button:active {
     transform: scale(0.94);
-  }
-
-  .yes {
-    background: #ff4d6d;
-    color: white;
-  }
-
-  .no {
-    background: #eee;
-    color: #444;
-    position: relative;
-  }
-
-  .message {
-    margin-top: 20px;
-    font-size: 16px;
-    color: #333;
-  }
-
-  img {
-    max-width: 100%;
-    border-radius: 15px;
-    margin-top: 15px;
   }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <h1>Alexandra, will you be my Valentine? 💘</h1>
-
-  <div class="buttons">
-    <button class="yes" onclick="haptic('medium'); yesClicked()">Yes ❤️</button>
-    <button class="no" onclick="haptic('light'); noClicked()" onmouseover="moveNo()">No 💔</button>
+<div class="container">
+  <div class="note" id="note">
+    1. Hey my love 💕, my heart's been holding a tiny secret for you.
   </div>
 
-  <div class="message" id="message"></div>
-  <div id="media"></div>
+  <img class="media" id="media"
+       src="https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3451.gif">
+
+  <div id="buttons">
+    <button id="nextBtn">Next</button>
+  </div>
 </div>
 
 <script>
+  const messages = [
+    "1. Hey my love 💕, my heart's been holding a tiny secret for you.",
+    "2. I've been dreaming of telling you this, just quietly, just us 🥰.",
+    "3. This month made me fall for you even more 💖.",
+    "4. How about one special day, just hugs, smiles, and us? 🌸",
+    "5. Will you be my Valentine? 🐻💌"
+  ];
+
+  const mediaUrls = [
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3451.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3447.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3450.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3446.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3453.gif"
+  ];
+
+  const yesMedia = "https://raw.githubusercontent.com/INVESTORRBEN/Love-confession/refs/heads/main/IMG_3455.gif";
+  const noMedia  = "https://raw.githubusercontent.com/INVESTORRBEN/Love-confession/refs/heads/main/IMG_3454.png";
+
+  let currentIndex = 0;
+
+  const noteDiv = document.getElementById("note");
+  const mediaImg = document.getElementById("media");
+  const buttonsDiv = document.getElementById("buttons");
+
   function haptic(type = "light") {
     if (navigator.vibrate) {
-      if (type === "light") navigator.vibrate(30);
-      if (type === "medium") navigator.vibrate(60);
+      navigator.vibrate(type === "medium" ? 60 : 30);
     }
   }
 
-  function yesClicked() {
-    document.getElementById("message").innerHTML =
-      "Hurray! 🎉<br>Together with you is the best ❤️<br><br>" +
-      "<small>Take a screenshot and share with your partner</small>";
+  function fade(text, media) {
+    noteDiv.style.opacity = 0;
+    mediaImg.style.opacity = 0;
 
-    document.getElementById("media").innerHTML =
-      `<img src="https://raw.githubusercontent.com/INVESTORRBEN/Love-confession/refs/heads/main/IMG_3455.gif">`;
+    setTimeout(() => {
+      noteDiv.textContent = text;
+      mediaImg.src = media;
+      noteDiv.style.opacity = 1;
+      mediaImg.style.opacity = 1;
+    }, 700);
   }
 
-  function noClicked() {
-    document.getElementById("message").innerHTML =
-      "Oops 😞 even the screenshot is TAKEN but you’re not TAKEN";
+  function showNext() {
+    currentIndex++;
+    fade(messages[currentIndex], mediaUrls[currentIndex]);
 
-    document.getElementById("media").innerHTML =
-      `<img src="https://raw.githubusercontent.com/INVESTORRBEN/Love-confession/refs/heads/main/IMG_3454.png">`;
+    if (currentIndex === 4) {
+      buttonsDiv.innerHTML = `
+        <button onclick="haptic('medium'); answer(true)">Yes 💖</button>
+        <button onclick="haptic('light'); answer(false)">No 💔</button>
+      `;
+    }
   }
 
-  function moveNo() {
-    const btn = document.querySelector('.no');
-    const x = Math.random() * 120 - 60;
-    const y = Math.random() * 120 - 60;
-    btn.style.transform = `translate(${x}px, ${y}px)`;
+  function answer(isYes) {
+    if (isYes) {
+      fade("Hurray! 🎉 You make me so happy ❤️", yesMedia);
+    } else {
+      fade("Oops 😅 even a screenshot is TAKEN but you’re not TAKEN", noMedia);
+    }
+
+    buttonsDiv.innerHTML = `
+      <button>Take a screenshot and share with your partner 💌</button>
+    `;
   }
+
+  document.getElementById("nextBtn").addEventListener("click", showNext);
 </script>
 
 </body>
