@@ -18,22 +18,23 @@
 
   .note {
     background: #fff0f5;
-    padding: 20px 30px;
+    padding: 25px 35px;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.3em;
     max-width: 400px;
-    transition: opacity 0.5s;
+    opacity: 1;
+    transition: opacity 0.7s ease;
   }
 
   button {
-    margin-top: 20px;
-    padding: 10px 20px;
+    margin-top: 25px;
+    padding: 12px 25px;
     border: none;
     background: #ff66b3;
     color: white;
-    font-size: 1em;
+    font-size: 1.1em;
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s;
@@ -66,8 +67,13 @@
 
   button.addEventListener('click', () => {
     if(currentIndex < messages.length){
-      noteDiv.textContent = messages[currentIndex];
-      currentIndex++;
+      // Fade out
+      noteDiv.style.opacity = 0;
+      setTimeout(() => {
+        noteDiv.textContent = messages[currentIndex];
+        noteDiv.style.opacity = 1; // Fade in
+        currentIndex++;
+      }, 700); // Matches CSS transition
     } else {
       button.disabled = true;
       button.textContent = "💖 All done! 💖";
