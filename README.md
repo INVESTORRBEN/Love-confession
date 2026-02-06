@@ -1,94 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💖 For My Love 💖</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(120deg, #ff9a9e, #fad0c4);
-      margin: 0;
-      overflow: hidden;
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Note</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #ffe6f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
 
-    h1 {
-      font-size: 3rem;
-      color: #fff;
-      text-shadow: 2px 2px 8px #ff6f91;
-    }
+  .note {
+    background: #fff0f5;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    text-align: center;
+    font-size: 1.2em;
+    max-width: 400px;
+    transition: opacity 0.5s;
+  }
 
-    .heart-button {
-      font-size: 2rem;
-      background: #ff6f91;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    }
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background: #ff66b3;
+    color: white;
+    font-size: 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
 
-    .heart-button:hover {
-      transform: scale(1.2);
-      background: #ff4d6d;
-    }
-
-    .message {
-      margin-top: 20px;
-      font-size: 1.5rem;
-      color: #fff;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    /* Floating hearts animation */
-    .floating-heart {
-      position: absolute;
-      font-size: 2rem;
-      animation: floatUp 2s ease forwards;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-200px) scale(0.5); opacity: 0; }
-    }
-  </style>
+  button:hover {
+    background: #ff3399;
+  }
+</style>
 </head>
 <body>
 
-  <div>
-    <h1>💖 Click the Heart 💖</h1>
-    <button class="heart-button">❤️</button>
-    <div class="message" id="message">I love you more than words can say! 💕</div>
-  </div>
+<div class="note" id="note">
+1. Hey my love 💕, my heart’s been holding a tiny secret for you.
+</div>
+<button id="nextBtn">Next</button>
 
-  <script>
-    const button = document.querySelector('.heart-button');
-    const message = document.getElementById('message');
+<script>
+  const messages = [
+    "2. I’ve been dreaming of telling you this, just quietly, just us 🥰.",
+    "3. This month made me fall for you even more 💖.",
+    "4. How about one special day, just hugs, smiles, and us? 🌸",
+    "5. Will you be my Valentine? 🐻💌"
+  ];
 
-    button.addEventListener('click', () => {
-      // Show message
-      message.style.opacity = 1;
+  let currentIndex = 0;
 
-      // Create floating heart
-      const heart = document.createElement('div');
-      heart.classList.add('floating-heart');
-      heart.textContent = '💖';
-      heart.style.left = Math.random() * window.innerWidth + 'px';
-      heart.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-      document.body.appendChild(heart);
+  const noteDiv = document.getElementById('note');
+  const button = document.getElementById('nextBtn');
 
-      // Remove heart after animation
-      setTimeout(() => heart.remove(), 2000);
-    });
-  </script>
+  button.addEventListener('click', () => {
+    if(currentIndex < messages.length){
+      noteDiv.textContent = messages[currentIndex];
+      currentIndex++;
+    } else {
+      button.disabled = true;
+      button.textContent = "💖 All done! 💖";
+    }
+  });
+</script>
 
 </body>
 </html>
