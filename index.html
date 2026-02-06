@@ -12,25 +12,42 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+  }
+
+  .container {
+    border: 5px solid #ff66b3; /* Pink outer frame */
+    border-radius: 20px;
+    padding: 20px;
+    background: #ffe6f0;
+    text-align: center;
+    max-width: 450px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
   }
 
   .note {
     background: #fff0f5;
-    padding: 25px 35px;
+    padding: 20px 25px;
     border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    text-align: center;
-    font-size: 1.3em;
-    max-width: 400px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
     opacity: 1;
     transition: opacity 0.7s ease;
   }
 
+  .media {
+    border: 5px solid white;
+    border-radius: 15px;
+    max-width: 100%;
+    margin-bottom: 15px;
+    transition: opacity 0.7s ease;
+    opacity: 1;
+  }
+
   button {
-    margin-top: 25px;
     padding: 12px 25px;
+    margin: 5px;
     border: none;
     background: #ff66b3;
     color: white;
@@ -52,10 +69,15 @@
 </head>
 <body>
 
-<div class="note" id="note">
-1. Hey my love 💕, my heart's been holding a tiny secret for you.
+<div class="container">
+  <div class="note" id="note">
+    1. Hey my love 💕, my heart's been holding a tiny secret for you.
+  </div>
+  <img class="media" id="media" src="https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3451.gif" alt="Love Gif">
+  <div id="buttons">
+    <button id="nextBtn">Next</button>
+  </div>
 </div>
-<button id="nextBtn">Next</button>
 
 <script>
   const messages = [
@@ -66,25 +88,76 @@
     "5. Will you be my Valentine? 🐻💌"
   ];
 
+  const mediaUrls = [
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3451.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3447.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3450.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3446.gif",
+    "https://raw.githubusercontent.com/INVESTORRBEN/Lovely/refs/heads/main/IMG_3453.gif"
+  ];
+
   let currentIndex = 0;
-
   const noteDiv = document.getElementById('note');
-  const button = document.getElementById('nextBtn');
+  const mediaImg = document.getElementById('media');
+  const buttonsDiv = document.getElementById('buttons');
 
-  button.addEventListener('click', () => {
+  function showNext() {
     if(currentIndex < messages.length - 1){
       currentIndex++;
-      // Fade out
-      noteDiv.style.opacity = 0;
-      setTimeout(() => {
-        noteDiv.textContent = messages[currentIndex];
-        noteDiv.style.opacity = 1; // Fade in
-      }, 700); // Matches CSS transition
-    } else {
-      button.disabled = true;
-      button.textContent = "💖 All done! 💖";
+      fadeMessage(messages[currentIndex], mediaUrls[currentIndex]);
+
+      // If we reach page 5, replace Next button with Yes/No buttons
+      if(currentIndex === 4){
+        buttonsDiv.innerHTML = `
+          <button id="yesBtn">Yes 💖</button>
+          <button id="noBtn">No 💔</button>
+        `;
+        document.getElementById('yesBtn').addEventListener('click', () => handleAnswer(true));
+        document.getElementById('noBtn').addEventListener('click', () => handleAnswer(false));
+      }
     }
-  });
+  }
+
+  function fadeMessage(text, mediaUrl) {
+    noteDiv.style.opacity = 0;
+    mediaImg.style.opacity = 0;
+    setTimeout(() => {
+      noteDiv.textContent = text;
+      mediaImg.src = mediaUrl;
+      noteDiv.style.opacity = 1;
+      mediaImg.style.opacity = 1;
+    }, 700);
+  }
+
+  function handleAnswer(isYes) {
+    if(isYes){
+      fadeMessage("Hurray! 🎉 You make me so happy ❤️", mediaUrls[4]);
+    } else {
+      fadeMessage("Oh… 😞 I’ll miss us 💔", mediaUrls[4]);
+    }
+
+    // Replace buttons with Share button
+    buttonsDiv.innerHTML = `
+      <button id="shareBtn">Share with your partner 💌</button>
+    `;
+    document.getElementById('shareBtn').addEventListener('click', () => shareMessage(isYes));
+  }
+
+  function shareMessage(isYes) {
+    const message = isYes ? "Hurray! 🎉 You make me so happy ❤️" : "Oh… 😞 I’ll miss us 💔";
+    const media = mediaUrls[4];
+    if(navigator.share){
+      navigator.share({
+        title: "A Love Note for You 💖",
+        text: message,
+        url: media
+      }).catch(err => console.log(err));
+    } else {
+      alert("Your device does not support direct sharing. Copy the GIF link and share manually!");
+    }
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', showNext);
 </script>
 
 </body>
